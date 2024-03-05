@@ -32,7 +32,7 @@ module cbrt_tb;
 
     initial begin
         clk = 0;
-        test_cbrt(1, 200, 5);
+        test_cbrt(1, 0, 0);
         test_cbrt(2, 1, 1);
         test_cbrt(3, 2, 1);
         test_cbrt(4, 8, 2);

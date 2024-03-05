@@ -18,7 +18,14 @@ module sqrt (
     reg [9:0] b;   
     reg [9:0] a; //x  
     reg [1:0] state;
-    wire a_more_than_b = (a >= b); 
+    
+    reg [13:0] sub_a;
+    reg [13:0] sub_b;
+    wire [13:0] sub_y;
+    
+    sub sub1(.a_bi(sub_a), .b_bi(sub_b), .y_bo(sub_y));
+    
+    wire a_more_than_b = (a >= sub_b); 
     
     assign busy_o = (state != IDLE);
     
@@ -45,15 +52,17 @@ module sqrt (
                         end else begin 
                             state <= WORK_COLLECT;                       
                             part_res <= part_res >> 1;
-                            b <= part_res | ctr;
+                            sub_b <= part_res | ctr;
+                            sub_a <= a;
                         end                   
                     end
                  WORK_COLLECT:
                     begin                        
                         if (a_more_than_b) begin
-                            a <= a - b;                         
+                            a <= sub_y;                        
                             part_res <= part_res | ctr;
                         end 
+                        b <= sub_b;
                         state <= WORK_CALC;                       
                         ctr <= ctr >> 2;               
                     end
